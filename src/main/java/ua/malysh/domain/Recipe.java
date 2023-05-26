@@ -1,34 +1,20 @@
 package ua.malysh.domain;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.Hibernate;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
 @Table(name = "recipes",
         indexes = {
-                @Index(name = "idx_recipe_id", columnList = "id")},
+                @Index(name = "idx_recipes_recipe_id", columnList = "recipe_id")},
         uniqueConstraints = {
-                @UniqueConstraint(name = "uc_recipe_name", columnNames = {"name"})})
-@Getter
-@Setter
+                @UniqueConstraint(name = "uc_recipes_recipe_name", columnNames = {"recipe_name"})})
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
@@ -41,8 +27,19 @@ public class Recipe {
     @Column(name = "recipe_name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @ElementCollection
+    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "ingredient")
+    @Setter(AccessLevel.PRIVATE)
     private Set<Ingredient> ingredients = new HashSet<>();
+
+    public void addIngredient(Ingredient ingredient) {
+        this.ingredients.add(ingredient);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        this.ingredients.removeAll(Set.of(ingredient));
+    }
 
     @Override
     public boolean equals(Object o) {
