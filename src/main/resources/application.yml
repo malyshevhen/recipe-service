@@ -1,11 +1,11 @@
-server:
-  port: '8081'
+# server:
+#   port: '8081'
 
 spring:
-  datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/recipe_db}
-    username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:password}
+#   datasource:
+#     url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/recipe_db}
+#     username: ${DATASOURCE_USERNAME:postgres}
+#     password: ${DATASOURCE_PASSWORD:password}
 
   flyway:
     enabled: true
