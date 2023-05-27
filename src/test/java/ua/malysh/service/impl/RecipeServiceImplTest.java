@@ -1,9 +1,9 @@
 package ua.malysh.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import jakarta.transaction.Transactional;
 import ua.malysh.domain.Ingredient;
-import ua.malysh.domain.Product;
 import ua.malysh.domain.Recipe;
 import ua.malysh.service.RecipeService;
 import ua.malysh.service.exceptions.RecipeAlreadyExistsException;
@@ -33,11 +32,10 @@ class RecipeServiceImplTest {
 
     @BeforeAll
     static void setup() {
-        var product = new Product(1L, "Test product");
 
         var ingredient = new Ingredient();
         ingredient.setAmount(2.2D);
-        ingredient.setProduct(product);
+        ingredient.setProductId(1L);
 
         recipe = new Recipe();
         recipe.setName("Test recipe");
@@ -90,7 +88,7 @@ class RecipeServiceImplTest {
 
         var newIngredient = new Ingredient();
         newIngredient.setAmount(2.2D);
-        newIngredient.setProduct(new Product(2L, "Carrot"));
+        newIngredient.setProductId(2L);
 
         Long recipeId = service.save(expected);
         service.addIngredient(recipeId, newIngredient);
