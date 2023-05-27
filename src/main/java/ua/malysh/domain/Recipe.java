@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,15 +22,18 @@ import java.util.Set;
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id", nullable = false)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "recipe_id",
+            nullable = false)
     private Long id;
 
-    @Column(name = "recipe_name", nullable = false)
+    @Column(name = "recipe_name",
+            nullable = false)
     private String name;
 
     @ElementCollection
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @CollectionTable(name = "recipe_ingredients",
+                     joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "ingredient")
     @Setter(AccessLevel.PRIVATE)
     private Set<Ingredient> ingredients = new HashSet<>();
@@ -45,8 +50,7 @@ public class Recipe {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null
-                || Hibernate.getClass(this) != Hibernate.getClass(o))
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
         Recipe recipe = (Recipe) o;
         return getId() != null && Objects.equals(getId(), recipe.getId());
