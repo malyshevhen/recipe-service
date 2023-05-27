@@ -1,5 +1,6 @@
 package ua.malysh.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,5 +76,42 @@ class RecipeServiceImplTest {
         service.deleteById(id);
         assertThrows(RecipeNotFoundException.class,
                 () -> service.findById(id));
+    }
+
+    @Test
+    void whenDeleteShouldThrowExceptionIfRecipeIsNotExistsInDB() {
+        assertThrows(RecipeNotFoundException.class,
+                () -> service.deleteById(1L));
+    }
+
+    @Test
+    void shouldAddIngredientToExistingRecipe() {
+        var expected = recipe;
+
+        var newIngredient = new Ingredient();
+        newIngredient.setAmount(2.2D);
+        newIngredient.setProduct(new Product(2L, "Carrot"));
+
+        Long recipeId = service.save(expected);
+        service.addIngredient(recipeId, newIngredient);
+
+        expected.setId(recipeId);
+        expected.addIngredient(newIngredient);
+        var actual = service.findById(recipeId);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldDeleteIngredientFromExistingRecipe() {
+        Long id = service.save(recipe);
+
+        var ingredient = recipe.getIngredients()
+                .iterator()
+                .next();
+        
+        service.deleteIngredient(id, ingredient);
+        
+        assertTrue(service.findById(id).getIngredients().isEmpty());
     }
 }
