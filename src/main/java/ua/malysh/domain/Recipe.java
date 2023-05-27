@@ -3,9 +3,12 @@ package ua.malysh.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -37,6 +40,20 @@ public class Recipe {
     @Column(name = "ingredient")
     @Setter(AccessLevel.PRIVATE)
     private Set<Ingredient> ingredients = new HashSet<>();
+
+    @Column(name = "recipe_description")
+    private String description;
+
+    @Column(name = "recipe_picture_url")
+    private String pictureUrl;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "modified_at")
+    @UpdateTimestamp
+    private LocalDateTime modifiedAt;
 
     public void addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
