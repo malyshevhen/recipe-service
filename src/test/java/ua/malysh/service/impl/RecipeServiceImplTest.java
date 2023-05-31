@@ -107,9 +107,9 @@ class RecipeServiceImplTest {
         var ingredient = recipe.getIngredients()
                 .iterator()
                 .next();
-        
+
         service.deleteIngredient(id, ingredient);
-        
+
         assertTrue(service.findById(id).getIngredients().isEmpty());
     }
 }

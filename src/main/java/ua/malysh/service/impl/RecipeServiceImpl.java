@@ -1,6 +1,9 @@
 package ua.malysh.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.function.Supplier;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.malysh.domain.Ingredient;
@@ -16,25 +19,18 @@ import ua.malysh.service.exceptions.RecipeNotFoundException;
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository repository;
 
-    private static RecipeNotFoundException throwRecipeNotFound() {
-        return new RecipeNotFoundException("Recipe with this id was not found!");
-    }
-
-    private static void throwRecipeAlreadyExists(Recipe r) {
-        throw new RecipeAlreadyExistsException("Recipe with this name already exists!");
-    }
-
     @Override
     public Long save(Recipe recipe) {
-        if (ifPresent(recipe)) throwRecipeAlreadyExists(recipe);
-
+        if (ifPresent(recipe)) {
+            throw new RecipeAlreadyExistsException("Recipe with this name already exists!");
+        }
         return repository.save(recipe).getId();
     }
 
     @Override
     public Recipe findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(RecipeServiceImpl::throwRecipeNotFound);
+                .orElseThrow(notFundExceptionSupplier());
     }
 
     @Override
@@ -64,5 +60,9 @@ public class RecipeServiceImpl implements RecipeService {
     private boolean ifPresent(Recipe recipe) {
         return repository.findByName(recipe.getName())
                 .isPresent();
+    }
+
+    private Supplier<? extends RecipeNotFoundException> notFundExceptionSupplier() {
+        return () -> new RecipeNotFoundException("Recipe with this id was not found!");
     }
 }
