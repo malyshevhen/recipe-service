@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  recipes-db:
+    image: postgres:15
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: recipes_db
+      POSTGRES_USER: ${DATASOURCE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD:-password}
+    volumes:
+      - recipes-data:/var/lib/postgresql/data
+    restart: on-failure
+
+volumes:
+  recipes-data:
